@@ -93,9 +93,11 @@ def list_employees(
     )
     if search:
         t = f"%{search}%"
+        full_name = Employee.first_name + " " + Employee.last_name
         q = q.filter(or_(
             Employee.first_name.ilike(t),
             Employee.last_name.ilike(t),
+            full_name.ilike(t),
             Employee.email.ilike(t),
             cast(Employee.id, String).ilike(t),
         ))

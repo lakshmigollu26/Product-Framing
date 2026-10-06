@@ -1,4 +1,4 @@
-const BASE = 'http://localhost:8000'
+const BASE = 'http://127.0.0.1:8000'
 
 export async function get<T>(path: string): Promise<T> {
   const res = await fetch(`${BASE}${path}`)
