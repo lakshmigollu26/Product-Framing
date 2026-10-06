@@ -43,7 +43,7 @@ class Employee(Base):
     country       = relationship("Country",    back_populates="employees")
     role          = relationship("Role",       back_populates="employees")
     salaries      = relationship("Salary", back_populates="employee",
-                                 order_by="Salary.effective_date.desc()")
+                                 order_by="[Salary.effective_date.desc(), Salary.id.desc()]")
 
 
 class Salary(Base):

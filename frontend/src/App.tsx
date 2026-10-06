@@ -219,7 +219,12 @@ function EmployeeDetail({ id, onBack }: { id: number; onBack: () => void }) {
   const loadEmp = useCallback(() => {
     setLoading(true)
     get<EmployeeDetail>(`/employees/${id}`)
-      .then(e => { setEmp(e); setLoading(false) })
+      .then(e => {
+        setEmp(e)
+        setLoading(false)
+        // Default currency to the employee's own currency
+        setCurrency(e.country.currency_code)
+      })
       .catch(e => { setError(e.message); setLoading(false) })
   }, [id])
 
@@ -331,7 +336,7 @@ function EmployeeDetail({ id, onBack }: { id: number; onBack: () => void }) {
             <p className="text-gray-400 text-sm">No records yet.</p>
           ) : (
             <div className="space-y-2">
-              {emp.salary_history.map(r => (
+              {[...emp.salary_history].reverse().map(r => (
                 <div key={r.id} className="border-b pb-2 text-sm">
                   <span className="font-medium">{Number(r.amount).toLocaleString()} {r.currency}</span>
                   <span className="text-gray-400 ml-2">{r.effective_date}</span>
@@ -464,6 +469,12 @@ type Tab = 'employees' | 'analytics'
 export default function App() {
   const [tab, setTab] = useState<Tab>('employees')
   const [selectedId, setSelectedId] = useState<number | null>(null)
+  const [listKey, setListKey] = useState(0)
+
+  const handleBack = () => {
+    setSelectedId(null)
+    setListKey(k => k + 1)   // force EmployeeList to remount + re-fetch
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -487,8 +498,8 @@ export default function App() {
       <main className="max-w-6xl mx-auto px-6 py-6">
         {tab === 'employees' && (
           selectedId
-            ? <EmployeeDetail id={selectedId} onBack={() => setSelectedId(null)} />
-            : <EmployeeList onSelect={setSelectedId} />
+            ? <EmployeeDetail id={selectedId} onBack={handleBack} />
+            : <EmployeeList key={listKey} onSelect={setSelectedId} />
         )}
         {tab === 'analytics' && <Analytics />}
       </main>
