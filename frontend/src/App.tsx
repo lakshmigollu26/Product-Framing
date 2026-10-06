@@ -30,7 +30,7 @@ interface SalaryRecord {
 }
 
 interface EmployeeDetail extends Employee {
-  salary_records: SalaryRecord[]
+  salary_history: SalaryRecord[]
 }
 
 interface PagedEmployees {
@@ -327,11 +327,11 @@ function EmployeeDetail({ id, onBack }: { id: number; onBack: () => void }) {
         {/* Salary history */}
         <div className="bg-white border rounded p-4">
           <h3 className="font-medium mb-3">Salary History</h3>
-          {emp.salary_records.length === 0 ? (
+          {emp.salary_history.length === 0 ? (
             <p className="text-gray-400 text-sm">No records yet.</p>
           ) : (
             <div className="space-y-2">
-              {emp.salary_records.map(r => (
+              {emp.salary_history.map(r => (
                 <div key={r.id} className="border-b pb-2 text-sm">
                   <span className="font-medium">{Number(r.amount).toLocaleString()} {r.currency}</span>
                   <span className="text-gray-400 ml-2">{r.effective_date}</span>
